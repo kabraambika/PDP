@@ -1,15 +1,15 @@
 package assignment2.products;
 
-import assignment2.enums.HouseholdProductType;
 import assignment2.enums.ProductCategory;
+import assignment2.enums.ProductType;
 import java.util.Objects;
 
 public class HouseholdProduct extends AbstractProduct{
   private ProductCategory productCategory;
-  private HouseholdProductType productType;
+  private ProductType productType;
   private Integer unitsPerPackage;
 
-  public HouseholdProduct(String manufacturer, String productName, Double price, int age, HouseholdProductType productType, Integer unitsPerPackage) {
+  public HouseholdProduct(String manufacturer, String productName, Double price, int age, ProductType productType, Integer unitsPerPackage) {
     super(manufacturer, productName, price, age);
     this.productType = productType;
     this.unitsPerPackage = unitsPerPackage;
@@ -20,7 +20,8 @@ public class HouseholdProduct extends AbstractProduct{
     return this.productCategory;
   }
 
-  public HouseholdProductType getProductType() {
+  @Override
+  public ProductType getProductType() {
     return this.productType;
   }
 

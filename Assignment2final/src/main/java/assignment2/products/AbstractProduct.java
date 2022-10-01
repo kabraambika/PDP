@@ -1,4 +1,6 @@
 package assignment2.products;
+import assignment2.enums.ProductCategory;
+import assignment2.enums.ProductType;
 import java.util.Objects;
 
 public abstract class AbstractProduct {
@@ -6,7 +8,6 @@ public abstract class AbstractProduct {
   private String productName;
   private Double price;
   private int age;
-
   public AbstractProduct(String manufacturer, String productName, Double price, int age) {
     this.manufacturer = manufacturer;
     this.productName = productName;
@@ -58,4 +59,7 @@ public abstract class AbstractProduct {
         ", age=" + age +
         '}';
   }
+
+  public abstract ProductCategory getProductCategory();
+  public abstract ProductType getProductType();
 }

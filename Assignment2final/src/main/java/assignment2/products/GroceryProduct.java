@@ -1,15 +1,15 @@
 package assignment2.products;
 
-import assignment2.enums.GroceryProductType;
 import assignment2.enums.ProductCategory;
+import assignment2.enums.ProductType;
 import java.util.Objects;
 
 public class GroceryProduct extends AbstractProduct{
   private ProductCategory productCategory;
-  private GroceryProductType productType;
+  private ProductType productType;
   private Double weight;
 
-  public GroceryProduct(String manufacturer, String productName, Double price, int age, GroceryProductType productType, Double weight) {
+  public GroceryProduct(String manufacturer, String productName, Double price, int age, ProductType productType, Double weight) {
     super(manufacturer, productName, price, age);
     this.productType = productType;
     this.weight = weight;
@@ -19,7 +19,8 @@ public class GroceryProduct extends AbstractProduct{
     return this.productCategory;
   }
 
-  public GroceryProductType getProductType() {
+  @Override
+  public ProductType getProductType() {
     return this.productType;
   }
 
