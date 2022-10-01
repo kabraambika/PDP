@@ -23,15 +23,15 @@ public class Name {
   }
 
   public String getFirstName() {
-    return firstName;
+    return this.firstName;
   }
 
   public String getMiddleName() {
-    return middleName;
+    return this.middleName;
   }
 
   public String getLastName() {
-    return lastName;
+    return this.lastName;
   }
 
   @Override
@@ -56,9 +56,9 @@ public class Name {
   @Override
   public String toString() {
     return "Name{" +
-        "firstName='" + firstName + '\'' +
-        ", middleName='" + middleName + '\'' +
-        ", lastName='" + lastName + '\'' +
+        "firstName='" + getFirstName() + '\'' +
+        ", middleName='" + getMiddleName() + '\'' +
+        ", lastName='" + getLastName() + '\'' +
         '}';
   }
 }

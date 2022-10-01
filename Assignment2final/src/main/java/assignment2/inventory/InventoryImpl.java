@@ -10,9 +10,17 @@ public class InventoryImpl implements Inventory{
   private List<StockItem> groceryStockItems;
   private List<StockItem> householdStockItems;
 
-  public InventoryImpl() {
+  private static InventoryImpl inventory;
+  private InventoryImpl() {
     this.groceryStockItems = new ArrayList<>();
     this.householdStockItems = new ArrayList<>();
+  }
+
+  public static InventoryImpl getInstance() {
+    if(inventory == null) {
+      inventory = new InventoryImpl();
+    }
+    return inventory;
   }
 
   public List<StockItem> getGroceryStockItems() {
@@ -32,7 +40,7 @@ public class InventoryImpl implements Inventory{
   }
 
   private Double getListPrice(List<StockItem> stockItemList) {
-    return stockItemList.stream().mapToDouble((item) -> item.getProduct().getPrice()).sum();
+    return stockItemList.stream().mapToDouble((item) -> (item.getProduct().getPrice() * item.getQuantity())).sum();
   }
 
   @Override
@@ -49,7 +57,7 @@ public class InventoryImpl implements Inventory{
   private void addHouseholdStockItem(StockItem stockItem) {
     boolean isExistingItem = updateExistingStockItem(stockItem, getHouseholdStockItems());
     if(!isExistingItem) {
-      StockItem newItem = new StockItem(stockItem.getProduct(), 1.0);
+      StockItem newItem = new StockItem(stockItem.getProduct(), stockItem.getQuantity());
       addNewHouseholdItem(newItem);
     }
   }
@@ -57,7 +65,7 @@ public class InventoryImpl implements Inventory{
   private void addGroceryStockItem(StockItem stockItem) {
     boolean isExistingItem = updateExistingStockItem(stockItem, getGroceryStockItems());
     if(!isExistingItem) {
-      StockItem newItem = new StockItem(stockItem.getProduct(), 1.0);
+      StockItem newItem = new StockItem(stockItem.getProduct(), stockItem.getQuantity());
       addNewGroceryItem(newItem);
     }
   }
@@ -66,7 +74,7 @@ public class InventoryImpl implements Inventory{
     for(StockItem item : stockItemList) {
       AbstractProduct stockProduct = item.getProduct();
       if(stockProduct.equals(itemProduct)) {
-        StockItem updateExistingItem = new StockItem(stockProduct, item.getQuantity()+1.0);
+        StockItem updateExistingItem = new StockItem(stockProduct, item.getQuantity() + stockItem.getQuantity());
         updateExistingList(item, updateExistingItem, stockItemList);
         return Boolean.TRUE;
       }
