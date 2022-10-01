@@ -65,12 +65,10 @@ public class InventoryImpl implements Inventory{
     AbstractProduct itemProduct = stockItem.getProduct();
     for(StockItem item : stockItemList) {
       AbstractProduct stockProduct = item.getProduct();
-      if(stockProduct.getProductType().equals(itemProduct.getProductType())) {
-        if(stockProduct.getProductName().equals(itemProduct.getProductName())) {
-          StockItem updateExistingItem = new StockItem(stockProduct, item.getQuantity()+1.0);
-          updateExistingList(item, updateExistingItem, stockItemList);
-          return Boolean.TRUE;
-        }
+      if(stockProduct.equals(itemProduct)) {
+        StockItem updateExistingItem = new StockItem(stockProduct, item.getQuantity()+1.0);
+        updateExistingList(item, updateExistingItem, stockItemList);
+        return Boolean.TRUE;
       }
     }
     return Boolean.FALSE;
