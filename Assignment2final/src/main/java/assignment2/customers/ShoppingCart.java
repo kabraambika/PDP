@@ -84,4 +84,8 @@ public class ShoppingCart {
   public void updateCart(Map<AbstractProduct, Double> itemsRemoved) {
     getItems().keySet().removeAll(itemsRemoved.keySet());
   }
+
+  public void setRestrictedItems(AbstractProduct product, Double qty) {
+    getItemsRemoved().put(product, qty);
+  }
 }

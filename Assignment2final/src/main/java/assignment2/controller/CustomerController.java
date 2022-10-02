@@ -1,7 +1,6 @@
 package assignment2.controller;
 
 import assignment2.customers.Customer;
-import assignment2.exceptions.QuantityExceededException;
 import assignment2.products.AbstractProduct;
 import assignment2.view.CustomerView;
 
