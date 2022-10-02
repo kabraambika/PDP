@@ -7,9 +7,13 @@ import java.util.Objects;
 
 public class ShoppingCart {
   private Map<AbstractProduct, Double> items;
+  private Map<AbstractProduct, Double> itemsOutOfStock;
+  private Map<AbstractProduct, Double> itemsRemoved;
   private static ShoppingCart shoppingCart;
   private ShoppingCart() {
     this.items = new HashMap<>();
+    this.itemsOutOfStock = new HashMap<>();
+    this.itemsRemoved = new HashMap<>();
   }
   public static ShoppingCart getInstance() {
     if(shoppingCart == null) {
@@ -20,6 +24,14 @@ public class ShoppingCart {
 
   public Map<AbstractProduct, Double> getItems() {
     return this.items;
+  }
+
+  public Map<AbstractProduct, Double> getItemsOutOfStock() {
+    return itemsOutOfStock;
+  }
+
+  public Map<AbstractProduct, Double> getItemsRemoved() {
+    return itemsRemoved;
   }
 
   public Double totalCost() {
@@ -59,5 +71,17 @@ public class ShoppingCart {
     if(StockController.hasEnoughItems(product, qty)) {
       getItems().put(product, qty);
     }
+  }
+
+  public void setItemsOutOfStock(AbstractProduct product, Double qty) {
+   getItemsOutOfStock().put(product, qty);
+  }
+
+  public void removeProductFromCart(AbstractProduct product) {
+    getItems().remove(product);
+  }
+
+  public void updateCart(Map<AbstractProduct, Double> itemsRemoved) {
+    getItems().keySet().removeAll(itemsRemoved.keySet());
   }
 }

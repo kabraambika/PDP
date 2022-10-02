@@ -45,4 +45,8 @@ public class StockItem {
         ", quantity=" + getQuantity() +
         '}';
   }
+
+  public void setQuantity(Double quantity) {
+    this.quantity = quantity;
+  }
 }

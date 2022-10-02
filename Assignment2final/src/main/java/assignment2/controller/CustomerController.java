@@ -17,12 +17,11 @@ public class CustomerController {
     return this.customer;
   }
 
-  public void addProductInCart(AbstractProduct product) throws QuantityExceededException {
+  public void addProductInCart(AbstractProduct product) {
     getCustomer().getShoppingCart().addProduct(product);
   }
 
-  public void addProductInCart(AbstractProduct product, Double qty)
-      throws QuantityExceededException {
+  public void addProductInCart(AbstractProduct product, Double qty) {
     getCustomer().getShoppingCart().addProduct(product, qty);
   }
 }

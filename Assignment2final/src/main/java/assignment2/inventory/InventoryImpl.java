@@ -99,4 +99,25 @@ public class InventoryImpl implements Inventory{
     stockItemList.remove(item);
     stockItemList.add(updateExistingItem);
   }
+
+  public void decreaseQuantity(AbstractProduct product, Double qty){
+    if(product.getProductCategory().equals(ProductCategory.GROCERY)) {
+      decreaseQuantity(product, qty, getGroceryStockItems());
+    }
+    else {
+      decreaseQuantity(product, qty, getHouseholdStockItems());
+    }
+  }
+
+  private void decreaseQuantity(AbstractProduct product, Double qty, List<StockItem> stockItems) {
+    for(StockItem item : stockItems) {
+      if(item.getProduct().equals(product)){
+        item.setQuantity(item.getQuantity() - qty);
+        break;
+      }
+    }
+  }
+  public void decreaseQuantity(AbstractProduct product){
+    decreaseQuantity(product, 1.0);
+  }
 }

@@ -7,6 +7,7 @@ import assignment2.inventory.InventoryImpl;
 import assignment2.products.AbstractProduct;
 import assignment2.products.GroceryProduct;
 import assignment2.products.HouseholdProduct;
+import assignment2.staff.Staff;
 import assignment2.stock.StockItem;
 
 
@@ -24,18 +25,21 @@ public class SupermarketSystem {
     inventory.addStockItem(cheeseStock);
     inventory.addStockItem(macCheeseStock);
     inventory.addStockItem(shampooStock);
+
     System.out.println("Grocery :" + inventory.getGroceryStockItems().toString());
     System.out.println("Household :" + inventory.getHouseholdStockItems().toString());
     System.out.println("Total stock price: " + inventory.getTotalRetailPrice());
-
     Customer customer1 = new Customer(new Name("AMBIKA"), 21);
 
     CustomerController customerController = new CustomerController(customer1);
     customerController.addProductInCart(shampoo);
-    customerController.addProductInCart(shampoo, 100.0);
-    customerController.addProductInCart(swissCheese);
+    customerController.addProductInCart(shampoo, 20.0);
+    customerController.addProductInCart(macCheese, 1.0);
     System.out.println(customer1.getShoppingCart());
-    System.out.println("Total shopping amount : " + customer1.getShoppingCart().totalCost());
+    inventory.decreaseQuantity(macCheese);
+    Staff st = new Staff();
+    st.gatherOrder();
+    System.out.println(customer1.getShoppingCart());
   }
 
 }
