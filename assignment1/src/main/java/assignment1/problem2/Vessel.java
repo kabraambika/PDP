@@ -6,6 +6,7 @@ package assignment1.problem2;
 public class Vessel extends AbstractVehicle{
 
   /**
+   * Constructor of Vessel
    * @param vehicleID a unique identifier of a vehicle, represented as a String
    * @param manufactureYr a year vehicle was manufactured, represented as an Integer
    * @param makeModel represented as a MakeModel

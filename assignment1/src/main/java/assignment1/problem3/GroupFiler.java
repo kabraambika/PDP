@@ -1,19 +1,34 @@
 package assignment1.problem3;
 
+import static assignment1.problem3.TaxCalculatorConstants.GRP_INCOME_90000;
+import static assignment1.problem3.TaxCalculatorConstants.GRP_MAX_INTEREST;
+import static assignment1.problem3.TaxCalculatorConstants.GRP_MIN_INTEREST;
+import static assignment1.problem3.TaxCalculatorConstants.GRP_RET_CONT;
+import static assignment1.problem3.TaxCalculatorConstants.HEALTH_RET_CON;
+import static assignment1.problem3.TaxCalculatorConstants.MAX_CHILD_DEDUCT;
+import static assignment1.problem3.TaxCalculatorConstants.MAX_CHILD_EXP;
+import static assignment1.problem3.TaxCalculatorConstants.MIN_EARN_INCOME;
+import static assignment1.problem3.TaxCalculatorConstants.ZERO_TAX_INCOME;
+
 import java.util.Objects;
 
 /**
  * A kind of tax filer, extends Abstract tax filer
  * @author Ambika Kabra, kabraambika19
  */
-public class GroupFiler extends AbstractTaxFiler{
-  private GroupFilerType grpFilerType;
+public abstract class GroupFiler extends AbstractTaxFiler {
+
+  /**
+   * MIN_VAL 0 constant
+   */
+  private static final Double MIN_VAL = 0.0;
   private Integer numDependent;
   private Integer numChild;
   private Double childCareExp;
   private Double depCareExp;
 
   /**
+   * Constructor of GroupFiler class
    * @param taxID                   a unique tax filer identifier, represented as a String
    * @param contactInfo             represented as a ContactInfo, a custom class
    * @param lastYrEarning           Last year earnings, represented as a Double
@@ -26,32 +41,23 @@ public class GroupFiler extends AbstractTaxFiler{
    * @param healthAccount        Contributions made to a health savings account, represented as a
    *                                Double
    * @param donationContrib   Charitable donations and contributions, represented as a Double
-   * @param grpFilerType          Type of group file, represented as a GroupFilerType enum
    * @param numChild        Number of minor children, represented as an Integer
    * @param numDependent      Number of dependents, represented as an Integer
    * @param childCareExp       Childcare expenses, represented as a Double
    * @param depCareExp   Dependent-care expenses, represented as a Double
    */
-  public GroupFiler(String taxID, ContactInfo contactInfo, Double lastYrEarning,
+  protected GroupFiler(String taxID, ContactInfo contactInfo, Double lastYrEarning,
       Double totalTaxPaid, Double mortIntPaid, Double propertyIntPaid,
       Double studLoanPaid, Double retSavAccount, Double healthAccount,
-      Double donationContrib, GroupFilerType grpFilerType, Integer numDependent,
+      Double donationContrib, Integer numDependent,
       Integer numChild, Double childCareExp, Double depCareExp) {
     super(taxID, contactInfo, lastYrEarning, totalTaxPaid, mortIntPaid,
         propertyIntPaid, studLoanPaid, retSavAccount, healthAccount,
         donationContrib);
-    this.grpFilerType = grpFilerType;
     this.numChild = numChild;
     this.numDependent = numDependent;
     this.childCareExp = childCareExp;
     this.depCareExp = depCareExp;
-  }
-
-  /**
-   * @return this.grpFilerType
-   */
-  public GroupFilerType getGrpFilerType() {
-    return this.grpFilerType;
   }
 
   /**
@@ -94,38 +100,77 @@ public class GroupFiler extends AbstractTaxFiler{
       return false;
     }
     GroupFiler that = (GroupFiler) obj;
-    return getGrpFilerType() == that.getGrpFilerType() && Objects.equals(getNumDependent(),
-        that.getNumDependent()) && Objects.equals(getNumChild(), that.getNumChild())
-        && Objects.equals(getChildCareExp(), that.getChildCareExp())
-        && Objects.equals(getDepCareExp(), that.getDepCareExp());
+    return Objects.equals(this.getNumDependent(), that.getNumDependent())
+        && Objects.equals(this.getNumChild(), that.getNumChild()) && Objects.equals(
+        this.getChildCareExp(), that.getChildCareExp()) && Objects.equals(this.getDepCareExp(),
+        that.getDepCareExp());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), getGrpFilerType(), getNumDependent(), getNumChild(),
-        getChildCareExp(), getDepCareExp());
+    return Objects.hash(super.hashCode(), this.getNumDependent(), this.getNumChild(), this.getChildCareExp(),
+        getDepCareExp());
   }
 
   @Override
   public String toString() {
     return "GroupFiler{" +
-        "grpFilerType=" + getGrpFilerType() +
-        ", numDependent=" + getNumDependent() +
-        ", numChild=" + getNumChild() +
-        ", childCareExp=" + getChildCareExp() +
-        ", depCareExp=" + getDepCareExp() +
+        "numDependent=" + this.getNumDependent() +
+        ", numChild=" + this.getNumChild() +
+        ", childCareExp=" + this.getChildCareExp() +
+        ", depCareExp=" + this.getDepCareExp() +
         '}';
   }
 
   /**
-   * @return Tax amount of current group tax filer
+   * Calculate current taxable income for group and individual tax filers by subtracting the retirement and health savings deduction
+   * @param currentTaxAmt basic taxable income
+   * @return current taxable income after reduction for any tax filer
    */
-  @Override
-  public Double calculateTaxes() {
-    Double basicIncome = calculateCurrentTaxable();
-    Double taxableAfterRed = calculateTaxOnHealthRetirement(basicIncome, Boolean.TRUE);
-    Double taxableAfterMort = calculateTaxOnMortgagePropertyIn(taxableAfterRed);
-    Double taxableAfterCare = calculateTaxIncomeAfterChildcare(taxableAfterMort, this.getChildCareExp());
-    return calculateFinalTaxableIncome(taxableAfterCare, Boolean.TRUE);
+  protected Double calculateTaxOnHealthRetirement(Double currentTaxAmt) {
+
+    Double healthRetSav = this.getHealthAccount() + this.getRetSavAccount();
+
+    healthRetSav = healthRetSav * GRP_RET_CONT;
+
+    if (healthRetSav > HEALTH_RET_CON) {
+      healthRetSav = HEALTH_RET_CON;
+    }
+
+    if(healthRetSav > currentTaxAmt) {
+      return ZERO_TAX_INCOME;
+    } else {
+      return currentTaxAmt - healthRetSav;
+    }
+  }
+
+  /**
+   * Calculate current taxable income for group tax filers by subtracting the Childcare deduction.
+   * @param currentTaxAmt current taxable income for group tax files after reduction of mortgage interest and property tax deduction
+   * @return current taxable income after reduction for group tax filers
+   */
+  protected Double calculateTaxIncomeAfterChildcare(Double currentTaxAmt){
+    Double newTaxAmt = currentTaxAmt;
+    if(lastYrEarning < MIN_EARN_INCOME && this.getChildCareExp() > MAX_CHILD_EXP){
+      newTaxAmt -= MAX_CHILD_DEDUCT;
+    }
+
+    return newTaxAmt;
+  }
+
+  /**
+   * @param currentTaxAmt current taxable income for previous reduction
+   * @return the tax amount is calculated by taking the resulting taxable income
+   */
+  protected Double calculateFinalTaxableIncome(Double currentTaxAmt){
+    Double taxAmount = MIN_VAL;
+
+    if (currentTaxAmt <= GRP_INCOME_90000) {
+      taxAmount = currentTaxAmt * GRP_MIN_INTEREST;
+    } else {
+      taxAmount = currentTaxAmt * GRP_MAX_INTEREST;
+    }
+
+    return taxAmount;
   }
 }

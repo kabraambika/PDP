@@ -25,8 +25,8 @@ class AbstractTaxFilerTest {
   void setUp() {
     TaxFilerName filerName1 = new TaxFilerName("Ambika", "");
     contactInfo = new ContactInfo(filerName1, "225 Terry ave", "987654321","a@gmail.com");
-    abstractFiler = new IndividualFiler("123456", contactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
-    abstractFiler2 = new GroupFiler("123456", contactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, GroupFilerType.HEAD_OF_THE_HOUSEHOLD, 2, 2, 1200.0, 2500.0);
+    abstractFiler = new Employee("123456", contactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
+    abstractFiler2 = new HeadOfHousehold("123456", contactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, 2, 2, 1200.0, 2500.0);
   }
 
   @Test
@@ -88,7 +88,7 @@ class AbstractTaxFilerTest {
   void testEquals_NotSame() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("3456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("3456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -96,7 +96,7 @@ class AbstractTaxFilerTest {
   void testEquals_Same() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertTrue(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -115,13 +115,13 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter1() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("3456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("3456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
   @Test
   void testEquals_Parameter2() {
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", null, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", null, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -129,7 +129,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter3() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, null, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, null, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -137,7 +137,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter4() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, null, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, null, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -145,7 +145,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter5() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, totalTaxPaid, null, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, totalTaxPaid, null, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -153,7 +153,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter6() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, null, studLoanPaid, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, null, studLoanPaid, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -161,7 +161,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter7() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, null, retSavAccount, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, null, retSavAccount, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -169,7 +169,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter8() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, null, healthAccount, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, null, healthAccount, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -177,7 +177,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter9() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, null, donationContrib, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, null, donationContrib);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -185,7 +185,7 @@ class AbstractTaxFilerTest {
   void testEquals_Parameter10() {
     TaxFilerName filerName = new TaxFilerName("Ambika", "");
     ContactInfo dupContactInfo = new ContactInfo(filerName, "225 Terry ave", "987654321","a@gmail.com");
-    AbstractTaxFiler dupAbstractFiler = new IndividualFiler("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, null, IndividualFilerType.EMPLOYEE);
+    AbstractTaxFiler dupAbstractFiler = new Employee("123456", dupContactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, null);
     assertFalse(abstractFiler.equals(dupAbstractFiler));
   }
 
@@ -218,37 +218,12 @@ class AbstractTaxFilerTest {
         ", healthAccount=" + healthAccount +
         ", donationContrib=" + donationContrib +
         '}';
-    assertNotEquals(expectedString, abstractFiler.toString());
+    assertEquals(expectedString, abstractFiler.toString());
   }
 
   @Test
   void calculateCurrentTaxable() {
     assertEquals(18000.0, abstractFiler.calculateCurrentTaxable());
-  }
-
-  @Test
-  void calculateTaxOnHealthRetirement() {
-    Double amt1 = abstractFiler.calculateTaxOnHealthRetirement(2000.0, Boolean.TRUE);
-    assertEquals(0.0, amt1);
-    Double amt2 = abstractFiler.calculateTaxOnHealthRetirement(2000.0, Boolean.FALSE);
-    assertEquals(0.0, amt2);
-    Double amt3 = abstractFiler.calculateTaxOnHealthRetirement(20000.0, Boolean.TRUE);
-    assertEquals(7130.0, amt3);
-    Double amt4 = abstractFiler.calculateTaxOnHealthRetirement(20000.0, Boolean.FALSE);
-    assertEquals(6140.0, amt4);
-    Double amt5 = abstractFiler.calculateTaxOnHealthRetirement(20000.0, Boolean.FALSE);
-    assertEquals(6140.0, amt5);
-  }
-
-  @Test
-  void calculateTaxOnHealthRetirement_MoreThanContrib() {
-    TaxFilerName filerName1 = new TaxFilerName("Ambika", "");
-    contactInfo = new ContactInfo(filerName1, "225 Terry ave", "987654321","a@gmail.com");
-    abstractFiler = new IndividualFiler("123456", contactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, 17500.0, donationContrib, IndividualFilerType.EMPLOYEE);
-    Double amt5 = abstractFiler.calculateTaxOnHealthRetirement(20000.0, Boolean.FALSE);
-    assertEquals(0.0, amt5);
-    Double amt3 = abstractFiler.calculateTaxOnHealthRetirement(20000.0, Boolean.TRUE);
-    assertEquals(2500.0, amt3);
   }
 
   @Test
@@ -265,7 +240,7 @@ class AbstractTaxFilerTest {
   void calculateTaxOnMortgagePropertyIn_InCondition1() {
     TaxFilerName filerName1 = new TaxFilerName("Ambika", "");
     contactInfo = new ContactInfo(filerName1, "225 Terry ave", "987654321","a@gmail.com");
-    abstractFiler = new IndividualFiler("123456", contactInfo, 300000.0, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, 17500.0, donationContrib, IndividualFilerType.EMPLOYEE);
+    abstractFiler = new Employee("123456", contactInfo, 300000.0, totalTaxPaid, mortgageIntPaid, propertyIntPaid, studLoanPaid, retSavAccount, 17500.0, donationContrib);
     Double amt3 = abstractFiler.calculateTaxOnMortgagePropertyIn(25000.0);
     assertEquals(25000.0, amt3);
   }
@@ -274,48 +249,8 @@ class AbstractTaxFilerTest {
   void calculateTaxOnMortgagePropertyIn_InCondition2() {
     TaxFilerName filerName1 = new TaxFilerName("Ambika", "");
     contactInfo = new ContactInfo(filerName1, "225 Terry ave", "987654321","a@gmail.com");
-    abstractFiler = new IndividualFiler("123456", contactInfo, lastYrEarning, totalTaxPaid, 125.0, propertyIntPaid, studLoanPaid, retSavAccount, 17500.0, donationContrib, IndividualFilerType.EMPLOYEE);
+    abstractFiler = new Employee("123456", contactInfo, lastYrEarning, totalTaxPaid, 125.0, propertyIntPaid, studLoanPaid, retSavAccount, 17500.0, donationContrib);
     Double amt3 = abstractFiler.calculateTaxOnMortgagePropertyIn(25000.0);
     assertEquals(25000.0, amt3);
-  }
-
-  @Test
-  void calculateTaxIncomeAfterChildcare() {
-    Double amt = abstractFiler.calculateTaxIncomeAfterChildcare(2000.0, 60000.0);
-    assertEquals(750.0, amt);
-  }
-
-  @Test
-  void calculateTaxIncomeAfterChildcare_lessIncome() {
-    TaxFilerName filerName1 = new TaxFilerName("Ambika", "");
-    contactInfo = new ContactInfo(filerName1, "225 Terry ave", "987654321", "a@gmail.com");
-    abstractFiler = new GroupFiler("123456", contactInfo, 200000.0, totalTaxPaid, mortgageIntPaid,
-        propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib,
-        GroupFilerType.HEAD_OF_THE_HOUSEHOLD, 2, 2, 100.0, 2500.0);
-    Double amt5 = abstractFiler.calculateTaxIncomeAfterChildcare(2000.0, 6000.0);
-    assertEquals(2000.0, amt5);
-  }
-
-  @Test
-  void calculateTaxIncomeAfterChildcare_lessContrib() {
-    TaxFilerName filerName1 = new TaxFilerName("Ambika", "");
-    contactInfo = new ContactInfo(filerName1, "225 Terry ave", "987654321", "a@gmail.com");
-    abstractFiler = new GroupFiler("123456", contactInfo, 2000.0, totalTaxPaid, mortgageIntPaid,
-        propertyIntPaid, studLoanPaid, retSavAccount, healthAccount, donationContrib,
-        GroupFilerType.HEAD_OF_THE_HOUSEHOLD, 2, 2, 100.0, 2500.0);
-    Double amt5 = abstractFiler.calculateTaxIncomeAfterChildcare(2000.0, 600.0);
-    assertEquals(2000.0, amt5);
-  }
-
-  @Test
-  void calculateFinalTaxableIncome_1() {
-    Double finalAmt = abstractFiler.calculateFinalTaxableIncome(50000.0, Boolean.TRUE);
-    assertEquals(7249.999999999999, finalAmt);
-  }
-
-  @Test
-  void calculateFinalTaxableIncome_2() {
-    Double finalAmt = abstractFiler.calculateFinalTaxableIncome(50000.0, Boolean.FALSE);
-    assertEquals(7500.0, finalAmt);
   }
 }

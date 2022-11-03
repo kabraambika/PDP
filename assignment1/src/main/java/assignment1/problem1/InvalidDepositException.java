@@ -6,6 +6,7 @@ package assignment1.problem1;
 public class InvalidDepositException extends RuntimeException {
 
   /**
+   * Constructor
    * @param message Message shown if customer deposit are invalid
    */
   public InvalidDepositException(String message) {

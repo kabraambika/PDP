@@ -11,6 +11,7 @@ public class FrequentFlyerName {
   private String middleName;
   private String lastName;
   /**
+   * Constructor of FrequentFlyerName
    * @param firstName frequent flyer first name
    * @param middleName frequent flyer middle name
    * @param lastName frequent flyer last name
@@ -22,6 +23,7 @@ public class FrequentFlyerName {
   }
 
   /**
+   * Getter of firstName
    * @return this.firstName
    */
   public String getFirstName() {
@@ -29,6 +31,7 @@ public class FrequentFlyerName {
   }
 
   /**
+   * Getter of middleName
    * @return this.middleName
    */
   public String getMiddleName() {
@@ -36,6 +39,7 @@ public class FrequentFlyerName {
   }
 
   /**
+   * getter of lastName
    * @return this.lastName
    */
   public String getLastName() {

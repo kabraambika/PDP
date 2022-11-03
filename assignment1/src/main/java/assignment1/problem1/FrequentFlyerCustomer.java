@@ -23,10 +23,12 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
    */
   private static final int MAX_AMT = 10_000;
   /**
+   * Constructor of class FrequentFlyerCustomer
    * @param accountID A unique account ID, which is a 12-character long String
    * @param name A name, consisting of first, middle and last name
    * @param email An email address
    * @param milesBalance A miles balance
+   * @throws InvalidCustomerException if account ID is not unique then this exception is thrown
    */
   public FrequentFlyerCustomer(String accountID, FrequentFlyerName name, String email,
       MilesBalance milesBalance) throws InvalidCustomerException {
@@ -44,6 +46,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * validate customer account id and name
    * @param accountID String, Frequent flyer account id
    * @param name FrequentFlyerName object
    * @return isValidAccountID - has 12 char or not and ID shouldn't be existing and has characters only
@@ -57,6 +60,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * validate customer name
    * @param name FrequentFlyerName object
    * @return has either first name, middle name or last name
    */
@@ -72,6 +76,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * Valid account id for customer as if unique or not
    * @param accountID A unique account ID, which is a 12-character long String.
    * @return has 12 char or not and ID shouldn't be existing and has characters only
    */
@@ -82,6 +87,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * getter of accountID
    * @return this.accountID
    */
   public String getAccountID() {
@@ -89,18 +95,21 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * getter of name
    * @return this.name
    */
   public FrequentFlyerName getName() {
     return this.name;
   }
   /**
+   * getter of email
    * @return this.email
    */
   public String getEmail() {
     return this.email;
   }
   /**
+   * getter of milesBalance
    * @return this.milesBalance
    */
   public MilesBalance getMilesBalance() {
@@ -137,6 +146,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * Deposit miles balance with given deposit amount of miles balance
    * @param depositAmount Deposit amount that is in the range [1000 to 10000] miles
    */
   @Override
@@ -156,6 +166,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * Withdraw deposit amount from sender
    * @param depositAmount Deposit amount that is in the range [1000 to 10000] miles
    */
   @Override
@@ -171,8 +182,11 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * Transfer deposit amount with given deposit information
    * @param deposit Deposit consists of: Deposit amount that is in the range [1000 to 10000] miles.
    *                The information about the recipient unique account ID, and their name.
+   * @throws InvalidDepositException if deposit is null or sender is not depositing amount in range or doesn't has amount,
+   *                                 exception will be thrown
    */
   @Override
   public void transferMiles(Deposit deposit) throws InvalidDepositException{
@@ -186,6 +200,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * check if customer [Sender] has amount equal miles balance to transfer deposit
    * @param depositAmount miles balances want to transfer to another flyer customer
    * @return has balance or not
    */
@@ -194,6 +209,7 @@ public class FrequentFlyerCustomer extends AbstractFrequentFlyer {
   }
 
   /**
+   * Update miles balance of sender
    * @param deposit Deposit consists of:
    *                Deposit amount that is in the range [1000 to 10000] miles.
    *                The information about the recipient unique account ID, and their name.

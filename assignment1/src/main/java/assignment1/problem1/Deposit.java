@@ -13,6 +13,7 @@ public class Deposit {
   private FrequentFlyerName recipientAccName;
 
   /**
+   * Constructor of Deposit
    * @param depositAmount Deposit amount that is in the range [1000 to 10000] miles
    * @param recipientAccID unique account ID of recipient
    * @param recipientAccName name of recipient
@@ -24,6 +25,7 @@ public class Deposit {
   }
 
   /**
+   * Getter of deposit amount
    * @return this.depositAmount
    */
   public Integer getDepositAmount() {
@@ -31,6 +33,7 @@ public class Deposit {
   }
 
   /**
+   * getter of recipientAccID
    * @return this.recipientAccID
    */
   public String getRecipientAccID() {
@@ -38,6 +41,7 @@ public class Deposit {
   }
 
   /**
+   * getter of recipientAccName
    * @return this.recipientAccName
    */
   public FrequentFlyerName getRecipientAccName() {

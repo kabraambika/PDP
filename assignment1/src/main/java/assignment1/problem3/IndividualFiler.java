@@ -1,12 +1,22 @@
 package assignment1.problem3;
+import static assignment1.problem3.TaxCalculatorConstants.IND_INCOME_55000;
+import static assignment1.problem3.TaxCalculatorConstants.IND_MAX_INTEREST;
+import static assignment1.problem3.TaxCalculatorConstants.IND_MIN_INTEREST;
+import static assignment1.problem3.TaxCalculatorConstants.IND_POINT_7;
+import static assignment1.problem3.TaxCalculatorConstants.ZERO_TAX_INCOME;
+
 import java.util.Objects;
 
 /**
  * A type of tax filer, IndividualFiler which extends AbstractTaxFiler
  * @author Ambika kabra, kabraambika19
  */
-public class IndividualFiler extends AbstractTaxFiler{
-  private IndividualFilerType indFilerType;
+public abstract class IndividualFiler extends AbstractTaxFiler{
+
+  /**
+   * MIN_VAL 0 constant
+   */
+  private static final Double MIN_VAL =0.0;
 
   /**
    * @param taxID                   a unique tax filer identifier, represented as a String
@@ -21,60 +31,45 @@ public class IndividualFiler extends AbstractTaxFiler{
    * @param healthAccount        Contributions made to a health savings account, represented as a
    *                                Double
    * @param donationContrib   Charitable donations and contributions, represented as a Double
-   * @param indFilerType     Type of Individual Filer, represented as an enum IndividualFilerType
    */
-  public IndividualFiler(String taxID, ContactInfo contactInfo, Double lastYrEarning,
+  protected IndividualFiler(String taxID, ContactInfo contactInfo, Double lastYrEarning,
       Double totalTaxPaid, Double mortgageIntPaid, Double propertyIntPaid,
       Double studLoanPaid, Double retSavAccount, Double healthAccount,
-      Double donationContrib, IndividualFilerType indFilerType) {
+      Double donationContrib) {
     super(taxID, contactInfo, lastYrEarning, totalTaxPaid, mortgageIntPaid,
         propertyIntPaid, studLoanPaid, retSavAccount, healthAccount,
         donationContrib);
-    this.indFilerType = indFilerType;
   }
 
   /**
-   * @return this.indFilerType
+   * Calculate current taxable income for group and individual tax filers by subtracting the retirement and health savings deduction
+   * @param currentTaxAmt basic taxable income
+   * @return current taxable income after reduction for any tax filer
    */
-  public IndividualFilerType getIndFilerType() {
-    return this.indFilerType;
-  }
+  protected Double calculateTaxOnHealthRetirement(Double currentTaxAmt) {
+    Double healthRetSav = this.getHealthAccount() + this.getRetSavAccount();
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    if (!super.equals(obj)) {
-      return false;
-    }
-    IndividualFiler that = (IndividualFiler) obj;
-    return getIndFilerType() == that.getIndFilerType();
-  }
+    healthRetSav = healthRetSav * IND_POINT_7;
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), getIndFilerType());
-  }
-
-  @Override
-  public String toString() {
-    return "IndividualFiler{" +
-        "indFilerType=" + getIndFilerType() +
-        '}';
+    if(healthRetSav > currentTaxAmt) {
+      return ZERO_TAX_INCOME;
+    } else {
+      return currentTaxAmt - healthRetSav;
+    }
   }
 
   /**
-   * @return tax amount of current individual tax filer
+   * @param currentTaxAmt current taxable income for previous reduction
+   * @return the tax amount is calculated by taking the resulting taxable income
    */
-  @Override
-  public Double calculateTaxes() {
-    Double basicTaxIncome = calculateCurrentTaxable();
-    Double taxableAfterRed = calculateTaxOnHealthRetirement(basicTaxIncome, Boolean.FALSE);
-    Double taxableAfterMort = calculateTaxOnMortgagePropertyIn(taxableAfterRed);
-    return calculateFinalTaxableIncome(taxableAfterMort, Boolean.FALSE);
+  protected Double calculateFinalTaxableIncome(Double currentTaxAmt){
+
+    Double taxAmount = MIN_VAL;
+    if (currentTaxAmt <= IND_INCOME_55000) {
+      taxAmount = currentTaxAmt * IND_MIN_INTEREST;
+    } else {
+      taxAmount = currentTaxAmt * IND_MAX_INTEREST;
+    }
+    return taxAmount;
   }
 }

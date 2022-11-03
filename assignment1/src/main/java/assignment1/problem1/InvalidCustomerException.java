@@ -6,6 +6,7 @@ package assignment1.problem1;
 public class InvalidCustomerException extends RuntimeException {
 
   /**
+   * Constructor
    * @param message Message shown when customer details are not valid
    */
   public InvalidCustomerException(String message) {

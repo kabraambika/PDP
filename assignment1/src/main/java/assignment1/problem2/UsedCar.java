@@ -11,6 +11,7 @@ public class UsedCar extends VehicleCar {
   private Integer numPrevOwner;
   private Integer numOfAccident;
   /**
+   * Constructor of UsedCar
    * @param vehicleID              a unique identifier of a vehicle, represented as a String
    * @param manufactureYr a year vehicle was manufactured, represented as an Integer
    * @param makeModel       represented as a MakeModel, a custom class
@@ -28,6 +29,7 @@ public class UsedCar extends VehicleCar {
   }
 
   /**
+   * getter of mileage
    * @return this.mileage
    */
   public Integer getMileage() {
@@ -35,6 +37,7 @@ public class UsedCar extends VehicleCar {
   }
 
   /**
+   * getter of numPrevOwner
    * @return this.numPrevOwner
    */
   public Integer getNumPrevOwner() {
@@ -42,6 +45,7 @@ public class UsedCar extends VehicleCar {
   }
 
   /**
+   * getter of numOfAccident
    * @return this.numOfAccident
    */
   public Integer getNumOfAccident() {

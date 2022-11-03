@@ -7,6 +7,7 @@ package assignment1.problem2;
 public class VehicleCar extends AbstractVehicle{
 
   /**
+   * Constructor of VehicleCar
    * @param vehicleID a unique identifier of a vehicle, represented as a String
    * @param manufactureYr a year vehicle was manufactured, represented as an Integer
    * @param makeModel represented as a MakeModel, a custom class

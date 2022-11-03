@@ -12,6 +12,7 @@ public class MilesBalance {
   private int mileExpCurrYr;
 
   /**
+   * Constructor of MilesBalance
    * @param totalMileAvl An integer value, representing total miles available
    * @param milesEarnCurrYr An integer value, representing miles earned this year,
    * @param mileExpCurrYr An integer value, representing miles expiring by the end of this calendar year.
@@ -24,6 +25,7 @@ public class MilesBalance {
   }
 
   /**
+   * getter of totalMileAvl
    * @return this.totalMileAvl
    */
   public int getTotalMileAvl() {
@@ -31,6 +33,7 @@ public class MilesBalance {
   }
 
   /**
+   * getter of milesEarnCurrYr
    * @return this.milesEarnCurrYr
    */
   public int getMilesEarnCurrYr() {
@@ -38,6 +41,7 @@ public class MilesBalance {
   }
 
   /**
+   * getter of mileExpCurrYr
    * @return this.mileExpCurrYr
    */
   public int getMileExpCurrYr() {

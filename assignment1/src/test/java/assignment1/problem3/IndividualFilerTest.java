@@ -16,7 +16,6 @@ class IndividualFilerTest {
   Double retSavAccount1 = 3450.0;
   Double healthAccount1 = 17500.0;
   Double donationContrib1 = 340.0;
-  IndividualFilerType indFilerType1 = IndividualFilerType.EMPLOYEE;
   IndividualFiler indFiler2;
   String taxID2 = "9999999";
 
@@ -24,13 +23,8 @@ class IndividualFilerTest {
   void setUp() {
     TaxFilerName filerName1 = new TaxFilerName("Mr", "Brown");
     contactInfo1 = new ContactInfo(filerName1, "225 Terry ave", "987654321","a@gmail.com");
-    indFiler1 = new IndividualFiler(taxID1,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1, indFilerType1);
-    indFiler2 = new IndividualFiler(taxID2,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1, indFilerType1);
-  }
-
-  @Test
-  void getIndFilerType() {
-    assertEquals(IndividualFilerType.EMPLOYEE, indFiler1.getIndFilerType());
+    indFiler1 = new Employee(taxID1,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1);
+    indFiler2 = new Employee(taxID2,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1);
   }
 
   @Test
@@ -38,13 +32,12 @@ class IndividualFilerTest {
     assertTrue(indFiler1.equals(indFiler1));
     assertFalse(indFiler1.equals(null));
     assertFalse(indFiler1.equals(new StringBuilder("test0")));
-    assertFalse(indFiler1.equals(new IndividualFiler(taxID1,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1, null)));
-    assertTrue(indFiler1.equals(new IndividualFiler(taxID1,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1, indFilerType1)));
+    assertTrue(indFiler1.equals(new Employee(taxID1,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1)));
   }
 
   @Test
   void testHashCode() {
-    IndividualFiler dupIndFiler1 = new IndividualFiler(taxID1,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1, indFilerType1);
+    IndividualFiler dupIndFiler1 = new Employee(taxID1,contactInfo1, lastYrEarning1,totalTaxPaid1,mortgageIntPaid1,propertyIntPaid1, studLoanPaid1, retSavAccount1, healthAccount1, donationContrib1);
     StringBuilder stringBuilder = new StringBuilder("test1");
 
     assertEquals(indFiler1.hashCode(), indFiler1.hashCode());
@@ -54,15 +47,32 @@ class IndividualFilerTest {
   }
 
   @Test
-  void testToString() {
-    String expectedString = "IndividualFiler{" +
-        "indFilerType=" + IndividualFilerType.EMPLOYEE +
-        '}';
-    assertEquals(expectedString, indFiler1.toString());
+  void testCalculateTaxOnHealthRetirement(){
+    Double amt = indFiler1.calculateTaxOnHealthRetirement(2000.0);
+    assertEquals(0.0, amt);
   }
 
   @Test
-  void calculateTaxes() {
-    assertEquals(4016853.65, indFiler1.calculateTaxes());
+  void testCalculateTaxOnHealthRetirement_moreCurrentTaxableIncome(){
+    Double amt = indFiler1.calculateTaxOnHealthRetirement(2000000.0);
+    assertEquals(1985335.0, amt);
+  }
+
+  @Test
+  void testCalculateFinalTaxableIncome_lessBracket() {
+    Double amt = indFiler1.calculateFinalTaxableIncome(5500.0);
+    assertEquals(825.0, amt);
+  }
+
+  @Test
+  void testCalculateFinalTaxableIncome_equalBracket() {
+    Double amt = indFiler1.calculateFinalTaxableIncome(55000.0);
+    assertEquals(8250.0, amt);
+  }
+
+  @Test
+  void testCalculateFinalTaxableIncome_moreBracket() {
+    Double amt = indFiler1.calculateFinalTaxableIncome(60000.0);
+    assertEquals(11400.0, amt);
   }
 }

@@ -11,6 +11,7 @@ public class MakeModel {
   private String vehicleModel;
 
   /**
+   * Constructor of MakeModel
    * @param vehicleMake vehicle make, represented as a String
    * @param vehicleModel vehicle model, represented as a String
    */

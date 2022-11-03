@@ -52,6 +52,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   protected Double donationContrib;
 
   /**
+   * Constructor of AbstractTaxFiler
    * @param taxID a unique tax filer identifier, represented as a String
    * @param contactInfo represented as a ContactInfo, a custom class
    * @param lastYrEarning Last year earnings, represented as a Double
@@ -80,6 +81,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of taxID
    * @return this.taxID
    */
   public String getTaxID() {
@@ -87,6 +89,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of contactInfo
    * @return this.contactInfo
    */
   public ContactInfo getContactInfo() {
@@ -94,6 +97,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of lastYrEarning
    * @return this.lastYrEarning
    */
   public Double getLastYrEarning() {
@@ -101,6 +105,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of totalTaxPaid
    * @return this.totalTaxPaid
    */
   public Double getTotalTaxPaid() {
@@ -108,6 +113,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of mortgageIntPaid
    * @return this.mortgageIntPaid
    */
   public Double getMortgageIntPaid() {
@@ -115,6 +121,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of propertyIntPaid
    * @return this.propertyIntPaid
    */
   public Double getPropertyIntPaid() {
@@ -122,6 +129,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of studLoanPaid
    * @return this.studLoanPaid
    */
   public Double getStudLoanPaid() {
@@ -129,6 +137,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of retSavAccount
    * @return this.retSavAccount
    */
   public Double getRetSavAccount() {
@@ -136,6 +145,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * Getter of healthAccount
    * @return this.healthAccount
    */
   public Double getHealthAccount() {
@@ -143,6 +153,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
   }
 
   /**
+   * getter of donationContrib
    * @return this.donationContrib;
    */
   public Double getDonationContrib() {
@@ -198,34 +209,7 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
    * @return basic taxable income
    */
   protected Double calculateCurrentTaxable(){
-    return this.getLastYrEarning() - getTotalTaxPaid();
-  }
-
-  /**
-   * Calculate current taxable income for group and individual tax filers by subtracting the retirement and health savings deduction
-   * @param currentTaxAmt basic taxable income
-   * @param isGroup : group-tax filer or not
-   * @return current taxable income after reduction for any tax filer
-   */
-  protected Double calculateTaxOnHealthRetirement(Double currentTaxAmt, Boolean isGroup) {
-
-    Double healthRetSav = this.getHealthAccount() + this.getRetSavAccount();
-
-    if(isGroup){
-      healthRetSav = healthRetSav * GRP_RET_CONT;
-
-      if (healthRetSav > HEALTH_RET_CON) {
-        healthRetSav = HEALTH_RET_CON;
-      }
-    } else {
-      healthRetSav = healthRetSav * IND_POINT_7;
-    }
-
-    if(healthRetSav > currentTaxAmt) {
-      return ZERO_TAX_INCOME;
-    } else {
-      return currentTaxAmt - healthRetSav;
-    }
+    return this.getLastYrEarning() - this.getTotalTaxPaid();
   }
 
   /**
@@ -246,45 +230,5 @@ public abstract class AbstractTaxFiler implements TaxCalculator {
     }
 
     return newTaxAmt;
-  }
-
-  /**
-   * Calculate current taxable income for group tax filers by subtracting the Childcare deduction.
-   * @param currentTaxAmt current taxable income for group tax files after reduction of mortgage interest and property tax deduction
-   * @param childCareExp Childcare expenses, represented as a Double
-   * @return current taxable income after reduction for group tax filers
-   */
-  protected Double calculateTaxIncomeAfterChildcare(Double currentTaxAmt, Double childCareExp){
-    Double newTaxAmt = currentTaxAmt;
-    if(lastYrEarning < MIN_EARN_INCOME && childCareExp > MAX_CHILD_EXP){
-      newTaxAmt -= MAX_CHILD_DEDUCT;
-    }
-
-    return newTaxAmt;
-  }
-
-  /**
-   * @param currentTaxAmt current taxable income for previous reduction
-   * @param isGroup group-tax filer or not
-   * @return the tax amount is calculated by taking the resulting taxable income
-   */
-  protected Double calculateFinalTaxableIncome(Double currentTaxAmt, Boolean isGroup){
-
-    Double taxAmount = null;
-
-    if(isGroup) {
-      if (currentTaxAmt <= GRP_INCOME_90000) {
-        taxAmount = currentTaxAmt * GRP_MIN_INTEREST;
-      } else {
-        taxAmount = currentTaxAmt * GRP_MAX_INTEREST;
-      }
-    } else {
-      if (currentTaxAmt <= IND_INCOME_55000) {
-        taxAmount = currentTaxAmt * IND_MIN_INTEREST;
-      } else {
-        taxAmount = currentTaxAmt * IND_MAX_INTEREST;
-      }
-    }
-    return taxAmount;
   }
 }

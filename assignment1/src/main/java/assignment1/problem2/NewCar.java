@@ -15,6 +15,7 @@ public class NewCar extends VehicleCar {
   private NewCarDirectory newCarDirectory;
 
   /**
+   * Constructor of NewCar
    * @param vehicleID a unique identifier of a vehicle, represented as a String
    * @param manufactureYr a year vehicle was manufactured, represented as an Integer
    * @param makeModel represented as a MakeModel

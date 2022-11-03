@@ -21,6 +21,11 @@ public abstract class AbstractFrequentFlyer implements IFrequentFlyer{
   private static final Double MAX_AMT = 10_000.0;
 
   /**
+   * Constructor of AbstractFrequentFlyer
+   */
+  protected AbstractFrequentFlyer() { }
+
+  /**
    * Private function with returns list of customers
    * @return this.customers
    */
@@ -29,6 +34,7 @@ public abstract class AbstractFrequentFlyer implements IFrequentFlyer{
   }
 
   /**
+   * Valid deposit amount and recipient
    * @param deposit Deposit consists of:
    *                Deposit amount that is in the range [1000 to 10000] miles.
    *                The information about the recipient unique account ID, and their name.
@@ -41,6 +47,7 @@ public abstract class AbstractFrequentFlyer implements IFrequentFlyer{
   }
 
   /**
+   * Validate deposit amount
    * @param depositAmount Deposit amount that is in the range [1000 to 10000] miles
    * @return boolean, whether amount in between the range or not
    */
@@ -48,6 +55,7 @@ public abstract class AbstractFrequentFlyer implements IFrequentFlyer{
     return MIN_AMT <= depositAmount && depositAmount <= MAX_AMT;
   }
   /**
+   * validate deposit recipient ID and name
    * @param rcptAccID recipient account ID, represented as String
    * @param recipientName recipient Name, represented as FrequentFlyerName
    * @return boolean, whether recipient is an existing customer or not and recipient name matches with saved name
@@ -60,6 +68,7 @@ public abstract class AbstractFrequentFlyer implements IFrequentFlyer{
   }
 
   /**
+   * check if account ID exists
    * @param accID Account ID
    * @return return whether this account ID exists in map of customers
    */
@@ -67,6 +76,7 @@ public abstract class AbstractFrequentFlyer implements IFrequentFlyer{
     return getCustomers().containsKey(accID);
   }
   /**
+   * validate recipient name
    * @param rcptAccID recipient account ID, represented as String
    * @param recipientName recipient Name, represented as FrequentFlyerName
    * @return recipient name matches with saved name

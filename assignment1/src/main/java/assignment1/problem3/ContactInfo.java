@@ -12,8 +12,8 @@ public class ContactInfo {
   private String phoneNumber;
   private String emailAddress;
 
-
   /**
+   * Constructor of ContactInfo
    * @param taxFilerName a tax filer first and last taxFilerName, represented as a TaxFilerName, another custom class
    * @param address a tax filer address, represented as a String
    * @param phoneNumber the tax filer phone number, represented as a String
@@ -27,6 +27,7 @@ public class ContactInfo {
   }
 
   /**
+   * Getter of taxFilerName
    * @return this.taxFilerName
    */
   public TaxFilerName getName() {
@@ -34,6 +35,7 @@ public class ContactInfo {
   }
 
   /**
+   * Getter of address
    * @return this.address
    */
   public String getAddress() {
@@ -41,6 +43,7 @@ public class ContactInfo {
   }
 
   /**
+   * Getter of phoneNumber
    * @return this.phoneNumber
    */
   public String getPhoneNumber() {
@@ -48,6 +51,7 @@ public class ContactInfo {
   }
 
   /**
+   * Getter of emailAddress
    * @return this.emailAddress
    */
   public String getEmailAddress() {
