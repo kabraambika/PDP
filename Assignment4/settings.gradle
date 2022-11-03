@@ -1,0 +1,4 @@
+rootProject.name = 'Assignment4'
+include 'src:test:EmptyTestDirectory'
+findProject(':src:test:EmptyTestDirectory')?.name = 'EmptyTestDirectory'
+
