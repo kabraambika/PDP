@@ -19,7 +19,7 @@ public class SentenceGenerator {
   /**
    * Constant for start non-terminal
    */
-  private static final String START_NON_TERMINAL = "start";
+  private static final String START_TERMINAL = "start";
 
   /**
    * Constant for Empty string
@@ -33,12 +33,12 @@ public class SentenceGenerator {
   /**
    * Regex for placeholder element
    */
-  private static final String NON_TERMINAL_REGEX = "(?<=\\<)(.*?)(?=\\>)";
+  private static final String TERMINAL_REGEX = "(?<=\\<)(.*?)(?=\\>)";
 
   /**
    * Constant for pattern complied for placeholder regex
    */
-  private static final Pattern NON_TERMINAL_PATTERN = Pattern.compile(NON_TERMINAL_REGEX);
+  private static final Pattern TERMINAL_PATTERN = Pattern.compile(TERMINAL_REGEX);
   /**
    * Regex for punctuation
    */
@@ -46,20 +46,21 @@ public class SentenceGenerator {
   /**
    * Constant for pattern of punctuation regex
    */
-  private static final Pattern PUNCTUATION_PATTERN = Pattern.compile(PUNCTUATION_REGEX);
+  private static final Pattern PUNCTUATION_PTR = Pattern.compile(PUNCTUATION_REGEX);
   private Grammar grammar;
   private Long randomSeed;
+  private boolean errorEncountered;
 
   /**
    * Constructor of SentenceGenerator
    *
-   * @param grammar    Represented as Grammar instance, represents grammar json file
-   * @param randomSeed Represented as Long, number used to generate random number for creating
-   *                   sentence
+   * @param grammar Represented as Grammar instance, represents grammar json file
+   * @param randomSeed Represented as Long, number used to generate random number for creating sentence
    */
   public SentenceGenerator(Grammar grammar, Long randomSeed) {
     this.grammar = grammar;
     this.randomSeed = randomSeed;
+    this.errorEncountered = Boolean.FALSE;
   }
 
   /**
@@ -72,66 +73,76 @@ public class SentenceGenerator {
   }
 
   /**
+   * Check if error encountered
+   *
+   * @return boolean, this.errorEncountered
+   */
+  public boolean isErrorEncountered() {
+    return this.errorEncountered;
+  }
+
+  /**
    * This method generates sentence according to start provided in grammar instance
    *
    * @return Represented as String, final sentence for user
    */
-  public String generateRandomSentence() throws MissingDefinitionException {
-    //Choose one of the start productions at random
-    String startProduction = readDefinition(START_NON_TERMINAL);
-    //add words of start production in stack
-    Stack<String> grammarElements = splitStartProduction(startProduction);
-    return createSentence(grammarElements).trim(); //replace placeholder by value
+  public String generateRandomSentence() {
+    String startProduction = this.readDefinition(START_TERMINAL); //Choose one of the start productions at random
+    Stack<String> grammarElements = this.splitStartProduction(startProduction); //add words of start production in stack
+    return this.createSentence(grammarElements).trim(); //replace placeholder by value
   }
 
   /**
-   * This helper method recursively replaces a non-terminal, considering its definition, which will
-   * contain a set of productions. then chooses one of the productions at random. Take the words
-   * from the chosen production in sequence and add them in stack (recursively) and expands it to
-   * generate a random sentence.
+   * This helper method recursively replaces a non-terminal, considering its definition, which will contain a set of productions.
+   * then chooses one of the productions at random.
+   * Take the words from the chosen production in sequence and add them in stack (recursively) and expands it to generate a random sentence.
    *
    * @param grammarElements Represented as Stack of string, Stack of start production elements
    * @return Represented as String, empty string if stack is empty else sentence
    */
-  private String createSentence(Stack<String> grammarElements) throws MissingDefinitionException {
-    if (grammarElements.isEmpty()) {
+  private String createSentence(Stack<String> grammarElements) {
+    if(grammarElements.isEmpty()) {
       return EMPTY_SENTENCE; //base case: when there is no stack of grammar elements
     }
     else {
       String topElement = grammarElements.pop(); //get word from stack
 
       //get grammarElement name by removing starting and ending angular bracket
-      String grammarElement = getGrammarElement(topElement);
+      String grammarElement = this.getGrammarElement(topElement);
 
       if (grammarElement.isEmpty()) {
-        return textSpaceCorrection(topElement) + createSentence(grammarElements);
+        return this.textSpaceCorrection(topElement) + this.createSentence(grammarElements);
       } else {
         //get value of grammarElement from grammar
-        String elementValue = readDefinition(grammarElement);
+        String elementValue = this.readDefinition(grammarElement);
 
-        //create list of words for grammarElement value
-        List<String> innerElementList = Arrays.asList(elementValue.split(SINGLE_SPACE));
+        if(elementValue.isEmpty()) {
+          return EMPTY_SENTENCE;
+        }
+        else {
+          //create list of words for grammarElement value
+          List<String> innerElementList = Arrays.asList(elementValue.split(SINGLE_SPACE));
 
-        Collections.reverse(innerElementList); //reverse list
-        grammarElements.addAll(innerElementList); //add reversed list in stack
+          Collections.reverse(innerElementList); //reverse list
+          grammarElements.addAll(innerElementList); //add reversed list in stack
 
-        return createSentence(grammarElements);
+          return this.createSentence(grammarElements);
+        }
       }
     }
   }
 
   /**
-   * This private method adds space with terminal, if terminal is a punctuation then no space
-   * needed
+   * This private method adds space with terminal, if terminal is a punctuation then no space needed
    *
    * @param terminal String, top terminal from stack of sentence
-   * @return String, if punctuation, return terminal again else return after adding space before
-   * element
+   * @return String, if punctuation, return terminal again else return after adding space before element
    */
   private String textSpaceCorrection(String terminal) {
-    if (isPunctuation(terminal)) {
+    if(this.isPunctuation(terminal)) {
       return terminal;
-    } else {
+    }
+    else {
       return SINGLE_SPACE + terminal;
     }
   }
@@ -144,28 +155,29 @@ public class SentenceGenerator {
    */
   private boolean isPunctuation(String terminal) {
     String terminalString = terminal.trim();
-    Matcher matcher = PUNCTUATION_PATTERN.matcher(terminalString);
-    if (!terminalString.isEmpty() && matcher.find() && matcher.start() == 0) {
-      return Boolean.TRUE;
-    } else {
-      return Boolean.FALSE;
-    }
+    Matcher matcher = PUNCTUATION_PTR.matcher(terminalString);
+      if(!terminalString.isEmpty() && matcher.find() && matcher.start() == 0) {
+        return Boolean.TRUE;
+      }
+      else {
+        return Boolean.FALSE;
+      }
   }
 
   /**
    * Getter for placeholder nonTerminal with the help of regex pattern by finding match or not
    *
    * @param nonTerminal Represented as String, word from sentence
-   * @return Represented as String, Empty string if nonTerminal is not a placeholder else
-   * placeholder name
+   * @return Represented as String, Empty string if nonTerminal is not a placeholder else placeholder name
    */
   private String getGrammarElement(String nonTerminal) {
-    Matcher matcher = NON_TERMINAL_PATTERN.matcher(nonTerminal);
-    if (matcher.find()) {
+    Matcher matcher = TERMINAL_PATTERN.matcher(nonTerminal);
+    if(matcher.find()) {
       return matcher.group(1).trim();
     }
-
-    return EMPTY_SENTENCE;
+    else {
+      return EMPTY_SENTENCE;
+    }
   }
 
   /**
@@ -189,16 +201,21 @@ public class SentenceGenerator {
    * @return String, value of element at any random number in grammar
    * @throws MissingDefinitionException if there is no value of element in grammar json file
    */
-  private String readDefinition(String element) throws MissingDefinitionException {
+  private String readDefinition(String element) {
     List<String> productionList = this.getGrammar().getProductions(element);
-    if (productionList == null) {
-      throw new MissingDefinitionException("The " + this.grammar.getGrammarTitle()
-          + " JSON file does not have productions of non-terminal " + element
-          + " to create a random sentence.");
-    }
+    try {
+      if(productionList == null) {
+        throw new MissingDefinitionException("Oops! " + this.getGrammar().getGrammarTitle() +" grammar does not have definition of <"+ element +">, unable to create random sentence. Try again!");
+      }
 
-    Random random = generateRandomNumber();
-    return productionList.get(random.nextInt(productionList.size()));
+      Random random = this.generateRandomNumber();
+      return productionList.get(random.nextInt(productionList.size()));
+    }
+    catch(MissingDefinitionException definitionException) {
+     System.out.println(definitionException.getMessage());
+     this.errorEncountered = Boolean.TRUE;
+     return EMPTY_SENTENCE;
+    }
   }
 
   /**

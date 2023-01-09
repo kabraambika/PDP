@@ -1,157 +1,176 @@
 package assignment4.problem1;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Class to process user input
+ *
+ * @author vrindabisani and kabraambika19
+ */
 public class UserInterface {
+
+  /**
+   * Constant for q character
+   */
   private static final String QUIT = "q";
+
+  /**
+   * Constant for y character
+   */
   private static final String YES = "y";
-  private static final String NO = "n";
-  private File directory;
-  private List<Grammar> grammarList;
+
+  /**
+   * Constant for n character
+   */
+  private static final String NO_INPUT = "n";
+
+  /**
+   * Regex for number
+   */
+  private static final String NUMBER_REGEX = "[0-9]+";
+  private static final String JSON_EXTENSION = ".json";
+  private static final String HELP_NOTE = "\nNote: If you want to generate a random sentence, you can enter any number written before grammar name or press 'q' to quit from program." ;
+  private static final String DOT_SPACE = ". ";
+
   private Scanner scanner;
   private PrintStream printStream;
-  private boolean testMode;
+  private List<Grammar> grammars;
 
-  public UserInterface(File directory, InputStream inputStream, PrintStream printStream, boolean testMode) {
+  private boolean foundError;
+
+  /**
+   * Constructs userInterface
+   * @param inputStream input stream
+   * @param printStream print stream
+   */
+  public UserInterface(InputStream inputStream, PrintStream printStream) {
     this.scanner = new Scanner(inputStream);
     this.printStream = printStream;
-    this.directory = directory;
-    this.grammarList = new ArrayList<>();
-    this.testMode = testMode;
-  }
-
-  public void initiateProgram() throws EmptyDirectoryException {
-    System.out.println("Loading grammars...");
-    this.grammarList = this.loadGrammars(this.directory);
-    String grammarInput = this.readGrammarOption();
-    this.runUserInput(grammarInput);
-    String secondInput = this.readInputToContinue();
-    this.continueProgram(secondInput, grammarInput);
-  }
-
-  private void continueProgram(String secondInput, String grammarInput) {
-    if(secondInput.equals(YES)) {
-      this.runUserInput(grammarInput);
-      String continueInput = this.readInputToContinue();
-      this.continueProgram(continueInput, grammarInput);
-    }
-    else if (secondInput.equals(NO)) {
-      String grammarOption = this.readGrammarOption();
-      if(!this.testMode) {
-        this.runUserInput(grammarOption);
-        String continueInput = this.readInputToContinue();
-        this.continueProgram(continueInput, grammarOption);
-      }
-    }
-  }
-
-  private String readInputToContinue() {
-    System.out.println("Would you like another from same grammar? (y/n)");
-
-    String continueInput = this.scanner.nextLine().trim();
-    while (continueInput == null || !validInputToContinue(continueInput)) {
-      System.out.println("Invalid choice.\nWould you like another from same grammar? (y/n)");
-      continueInput = this.scanner.nextLine().trim();
-    }
-    return continueInput;
-  }
-
-  private boolean validInputToContinue(String continueInput) {
-    String userInput = continueInput.trim();
-    if(userInput.equals(YES) || userInput.equals(NO))
-      return Boolean.TRUE;
-    else
-      return Boolean.FALSE;
-  }
-
-  private void runUserInput(String userInput) {
-    int grammarIndex;
-    if(userInput.equals(QUIT)) {
-      System.out.println("Existing program...");
-      System.exit(0);
-    }
-    else {
-      grammarIndex = Integer.parseInt(userInput) - 1;
-      SentenceGenerator sentenceGenerator = new SentenceGenerator(this.grammarList.get(grammarIndex), null);
-
-      try {
-        String finalSentence = sentenceGenerator.generateRandomSentence();
-        printStream.println(finalSentence);
-      }
-      catch (MissingDefinitionException definitionException) {
-        printStream.println(definitionException.getMessage());
-      }
-      catch (StackOverflowError overflowError) {
-        printStream.println("Grammar file is creating infinite recursive call on non terminal element.");
-      }
-    }
-  }
-
-  private String readGrammarOption() {
-    System.out.println("The following grammars are available:");
-    int grammarIndex = 1;
-    for(Grammar grammar : this.grammarList) {
-      System.out.println(grammarIndex++ + ". " + grammar.getGrammarTitle());
-    }
-    System.out.println("\nPlease enter a number representing one of the grammar option above (press 'q' to quit)");
-    return scanUserInput();
-  }
-
-  private String scanUserInput() {
-    String chosenGrammar = this.scanner.nextLine().trim();
-    while (chosenGrammar == null || !validGrammarIndex(chosenGrammar)) {
-      System.out.println("Invalid grammar choice.\nPlease enter a number representing one of the grammar option above (press 'q' to quit)");
-      chosenGrammar = this.scanner.nextLine().trim();
-    }
-    return chosenGrammar.trim();
-  }
-
-  private boolean validGrammarIndex(String chosenGrammar) {
-    int chosenIndex;
-
-    if(chosenGrammar.equalsIgnoreCase(QUIT)) {
-      return Boolean.TRUE;
-    }
-
-    try {
-      chosenIndex = Integer.parseInt(chosenGrammar);
-    }
-    catch (NumberFormatException formatException) {
-      return false;
-    }
-
-    return chosenIndex <= this.grammarList.size() && chosenIndex > 0;
+    this.grammars = new ArrayList<>();
+    this.foundError = Boolean.FALSE;
   }
 
   /**
    * Loads grammar files from the directory
    * @param grammarDirectory path to grammar directory
-   * @return list of grammars from json files in the directory
    * @throws EmptyDirectoryException if directory has no json grammar files
-   * @throws DirectoryDoesNotExistException if directory does not exist
    */
-  private List<Grammar> loadGrammars(File grammarDirectory) throws EmptyDirectoryException {
-    List<Grammar> grammars = new ArrayList<>();
-    File[] grammarFiles = grammarDirectory.listFiles();
-    if(grammarFiles.length == 0) {
-      throw new EmptyDirectoryException("Grammar files are not available in directory");
-    }
-    else {
-      for(File path: grammarFiles) {
-        JSONFileParser jsonFileParser = new JSONFileParser(path.getAbsolutePath());
-        grammars.add(jsonFileParser.processJsonFile());
+  public void loadGrammars(File grammarDirectory) throws EmptyDirectoryException {
+    File[] directoryFiles = grammarDirectory.listFiles();
+
+    if(directoryFiles != null) {
+      for(File path: directoryFiles) {
+        if(path.getAbsolutePath().endsWith(JSON_EXTENSION)) {
+          JSONFileParser jsonFileParser = new JSONFileParser(path.getAbsolutePath());
+          this.grammars.add(jsonFileParser.processJsonFile());
+        }
       }
     }
-    return grammars;
+
+    if(this.grammars.isEmpty()) {
+      throw new EmptyDirectoryException("Grammar files are not available in directory");
+    }
   }
+
+  /**
+   * Generates sentence using grammar chosen by the user
+   */
+  public void generateSentence() {
+    while (Boolean.TRUE) {
+      this.displayGrammar();
+      String userInput = this.getInput();
+      if (QUIT.equalsIgnoreCase(userInput)) {
+        printStream.println("Exiting...");
+        break;
+      }
+      while(Boolean.TRUE) {
+        try{
+          String sentenceMade = this.getSentence(userInput);
+          if(sentenceMade.isEmpty() || this.foundError) {
+            printStream.println("Note: Press 'q' to quit program to fix grammar or choose from other grammar.");
+            break;
+          }
+          else {
+            printStream.println(sentenceMade);
+          }
+          printStream.println("\nWould you like another? (enter 'y' for yes or 'n' for no)");
+          String anotherInput = getInput();
+          if (this.doAgain(anotherInput)) {
+            continue;
+          }
+          break;
+        }
+        catch (InvalidInputException e) {
+          printStream.println(e.getMessage());
+          break;
+        }
+
+      }
+    }
+  }
+
+  /**
+   * Uses the same grammar chosen by the user until he wants to change it
+   * @return true if user wants to use same grammar else returns false
+   * @throws InvalidInputException if invalid input is given by the user
+   */
+  private boolean doAgain(String userInput) throws InvalidInputException {
+    String inputLowerCase = userInput.toLowerCase();
+    return switch (inputLowerCase) {
+      case YES -> Boolean.TRUE;
+      case NO_INPUT -> Boolean.FALSE;
+      default -> throw new InvalidInputException("Invalid input");
+    };
+  }
+
+  /**
+   * Generates sentence using the grammar chosen by user
+   * @param input grammar chosen by user
+   * @return sentence generated using the grammar chosen by user
+   * @throws InvalidInputException if invalid input is given by user
+   */
+  private String getSentence(String input) throws InvalidInputException {
+    if(!input.matches(NUMBER_REGEX)) {
+        throw new InvalidInputException("Invalid input");
+    }
+    int grammarChoice = Integer.parseInt(input);
+    if(grammarChoice > this.grammars.size()) {
+      throw new InvalidInputException("Invalid input");
+    }
+    SentenceGenerator sentenceGenerator = new SentenceGenerator(this.grammars.get(grammarChoice - 1), null);
+    String foundSentence = sentenceGenerator.generateRandomSentence();
+    this.foundError = sentenceGenerator.isErrorEncountered();
+    return foundSentence;
+  }
+
+
+  /**
+   * Displays list of available grammars to user
+   */
+
+  private void displayGrammar(){
+    int counter = 1;
+    this.printStream.println("The following grammars are available:");
+    for(Grammar grammar : this.grammars){
+      printStream.println(counter + DOT_SPACE + grammar.getGrammarTitle());
+      counter++;
+    }
+    printStream.println(HELP_NOTE + "\nWhich would you like to use? (q to quit)");
+
+  }
+
+  /**
+   * Takes user input
+   *
+   * @return user input
+   */
+  private String getInput(){
+    return scanner.next();
+  }
+
 }

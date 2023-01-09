@@ -17,20 +17,24 @@ import java.util.Map;
 public class JSONFileReader {
 
   /**
-   * This function is used to read json file from directory at given path in inputs
+   * Empty constructor
+   */
+  public JSONFileReader() {}
+
+  /**
+   * This function is used to read json file from directory at given path in parameter
    *
    * @param jsonFileName Represented as String, path of json file
-   * @return Represented as Map, where key is element in String and Value is List of String
+   * @return Represented as Map, where key is element in String and Value is JsonElement
    */
   public Map<String, JsonElement> readFile(String jsonFileName) {
     Map<String, JsonElement> grammarJson;
     try (Reader fileReader = Files.newBufferedReader(Paths.get(jsonFileName))) {
       JsonElement jsonElement = JsonParser.parseReader(fileReader);
-      JsonObject rootObject = jsonElement.getAsJsonObject();
-      grammarJson = rootObject.asMap();
-
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+      JsonObject jsonRootObject = jsonElement.getAsJsonObject();
+      grammarJson = jsonRootObject.asMap();
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
     }
     return grammarJson;
   }

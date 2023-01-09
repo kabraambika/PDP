@@ -7,9 +7,6 @@ plugins {
 
 // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
-
-    // https://docs.gradle.org/current/userguide/application_plugin.html
-    id 'application'
 }
 
 group 'cs5010seaF22'
@@ -20,14 +17,14 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation 'com.google.code.gson:gson:2.10'
 }
 
 pmd {
-    ignoreFailures=true
-    pmdTest.enabled=false
+    ignoreFailures = true
+    pmdTest.enabled = false
     ruleSets = [
             "category/java/bestpractices.xml",
             "category/java/errorprone.xml",
@@ -102,12 +99,4 @@ task doAll {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
-}
-
-application {
-    mainClassName 'assignment4.problem1.Main'
-}
-
-run {
-    standardInput = System.in
 }

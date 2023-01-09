@@ -37,16 +37,16 @@ class JSONFileReaderTest {
   @Test
   void readFile_Exception() {
     assertThrows(RuntimeException.class, () -> {
-      Map<String, JsonElement> listMap = testReader.readFile("jsonReaderGrammar.json");
+      Map<String, JsonElement> jsonElementMap = testReader.readFile("jsonReaderGrammar.json");
     });
   }
 
   @Test
   void readFile() {
-    Map<String, JsonElement> listMap = testReader.readFile("src/test/resources/jsonReaderGrammar.json");
-    Map<String, List<String>> expNonTerminalMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, JsonElement> rawGrammarMap = testReader.readFile("src/test/resources/jsonReaderGrammar.json");
+    Map<String, List<String>> resultantMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    listMap.forEach((nonTerminal, jsonValue) -> {
+    rawGrammarMap.forEach((nonTerminal, jsonValue) -> {
       JsonArray productionArray = jsonValue.getAsJsonArray();
       List<String> productions = new ArrayList<>();
       if (productionArray != null) {
@@ -54,9 +54,9 @@ class JSONFileReaderTest {
           productions.add(productionArray.get(index).getAsString());
         }
       }
-      expNonTerminalMap.put(nonTerminal, productions);
+      resultantMap.put(nonTerminal, productions);
     });
 
-    assertEquals(nonTerminalMap, expNonTerminalMap);
+    assertEquals(nonTerminalMap, resultantMap);
   }
 }

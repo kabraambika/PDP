@@ -1,18 +1,18 @@
 package assignment4.problem1;
 
 /**
- * Throws exception if directory does not exist
+ * Throws exception if user inputs invalid input
  *
  * @author vrindabisani and kabraambika19
  */
-public class DirectoryDoesNotExistException extends RuntimeException {
+public class InvalidInputException extends RuntimeException {
 
   /**
    * constructor
    *
    * @param errorMessage error message
    */
-  public DirectoryDoesNotExistException(String errorMessage) {
+  public InvalidInputException(String errorMessage) {
     super(errorMessage);
   }
 }

@@ -1,25 +1,38 @@
 package assignment4.problem1;
 import java.io.File;
-import java.util.List;
 
-
+/**
+ * Class to parse directory path from command line
+ *
+ * @author vrindabisani and kabraambika19
+ */
 public class CommandLineParser {
-  private String directoryPath;
-  public CommandLineParser(String directoryPath) {
-    if(validateDirectory(directoryPath)) {
-      this.directoryPath = directoryPath;
-    } else {
-      throw new DirectoryDoesNotExistException("Unable to process directory path for reading grammar.");
+  private UserInterface userInterface;
+
+  /**
+   * Constructor
+   */
+  public CommandLineParser() {
+    this.userInterface = new UserInterface(System.in, System.out);
+  }
+
+  /**
+   * Initiates the program
+   *
+   * @param directoryPath contains path to grammar directory
+   * @throws EmptyDirectoryException if directory has no json files
+   * @throws DirectoryDoesNotExistException if directory does not exist
+   */
+  public void start(String directoryPath)
+      throws EmptyDirectoryException, DirectoryDoesNotExistException {
+
+    final File grammarDirectory = new File(directoryPath);
+    if(!grammarDirectory.exists()) {
+      throw new DirectoryDoesNotExistException("Directory does not exist");
     }
-  }
-
-  private boolean validateDirectory(String directoryPath) {
-    File grammarDirectory = new File(directoryPath);
-    return grammarDirectory.exists() && grammarDirectory.isDirectory() && grammarDirectory.canRead();
-  }
-
-  public File getDirectoryFile() {
-    return new File(this.directoryPath);
+    System.out.println("Loading grammars...");
+    this.userInterface.loadGrammars(grammarDirectory);
+    this.userInterface.generateSentence();
   }
 }
 

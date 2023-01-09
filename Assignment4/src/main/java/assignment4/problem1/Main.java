@@ -1,19 +1,26 @@
 package assignment4.problem1;
 
+/**
+ * Main class
+ *
+ * @author vrindabisani and kabraambika19
+ */
 public class Main {
 
-  public static void main(String[] args) {
-    try {
-      CommandLineParser parser = new CommandLineParser(args[0]);
-      UserInterface ui;
-      ui = new UserInterface(parser.getDirectoryFile(), System.in, System.out, false);
-      ui.initiateProgram();
+  /**
+   * Main method
+   *
+   * @param args path to grammar directory
+   * @throws InvalidInputException if user does not input directory path
+   * @throws EmptyDirectoryException if user gives directory path which does not have grammar files
+   * @throws DirectoryDoesNotExistException if directory does not exist
+   */
+  public static void main(String[] args)
+      throws InvalidInputException, EmptyDirectoryException, DirectoryDoesNotExistException {
+    if(args.length == 0){
+      throw new InvalidInputException("Directory path not given");
     }
-    catch(ArrayIndexOutOfBoundsException ex) {
-      throw new ArrayIndexOutOfBoundsException(ex.getMessage());
-    }
-    catch (EmptyDirectoryException directoryException) {
-      throw new EmptyDirectoryException(directoryException.getMessage());
-    }
+    CommandLineParser commandLineParser = new CommandLineParser();
+    commandLineParser.start(args[0]);
   }
 }

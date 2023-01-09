@@ -2,7 +2,7 @@
   "grammarTitle": "Test Generator",
   "grammarDesc": "Generates test sentence.",
   "start": [
-    "The <object> <verb> ."
+    "The <object> <verb>."
   ],
   "object": [
     "test"

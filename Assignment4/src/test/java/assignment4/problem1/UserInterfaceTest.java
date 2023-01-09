@@ -5,77 +5,92 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class UserInterfaceTest {
-  private UserInterface userInterfaceTest;
-  private ByteArrayInputStream inputStream;
-  private PrintStream ps;
-  private ByteArrayOutputStream byteArrayOutputStream;
-  private File directoryTest;
+
+  String testDirectory;
+
+  String grammar = "1";
+  String yes = "y";
+  String no = "n";
+  String quit = "q";
+  String invalidInput = "a";
+  String helpNote = "Note: If you want to generate a random sentence, you can enter any number written before grammar name or press 'q' to quit from program.";
+  String displayGrammar = "The following grammars are available:\n"
+      + "1. Test Generator\n\n"
+      + helpNote
+      + "\nWhich would you like to use? (q to quit)\n";
+  String useSameGrammar = "\nWould you like another? (enter 'y' for yes or 'n' for no)\n";
+  String exit = "Exiting...\n";
+  String invalidStatement = "Invalid input\n";
+
+  String testSentence;
+  UserInterface ui;
+
   @BeforeEach
   void setUp() {
-    directoryTest = new File("src/test/resources/TestDirectory");
-    byteArrayOutputStream = new ByteArrayOutputStream();
-    ps = new PrintStream(byteArrayOutputStream);
+    testDirectory = System.getProperty("user.dir") + "/src/test/resources/TestDirectory";
+    testSentence = "The test works fine\n";
   }
 
   @Test
-  void initiateProgram_No() {
-    inputStream = new ByteArrayInputStream("2\nn\nq\n".getBytes());
-    userInterfaceTest = new UserInterface(directoryTest, inputStream, ps, true);
-    userInterfaceTest.initiateProgram();
-    String outputText = byteArrayOutputStream.toString();
-    assertEquals("The test works fine.\n", outputText);
+  void generateSentence()
+      throws EmptyDirectoryException {
+    String outputText = getCLIOutput(grammar+"\n"+no+"\n"+quit+"\n");
+
+    assertEquals(displayGrammar + testSentence + useSameGrammar + displayGrammar + exit, outputText);
   }
 
   @Test
-  void initiateProgram_Yes_No() {
-    inputStream = new ByteArrayInputStream("2\ny\nn\nq\n".getBytes());
-    userInterfaceTest = new UserInterface(directoryTest, inputStream, ps, true);
-    userInterfaceTest.initiateProgram();
-    String outputText = byteArrayOutputStream.toString();
-    assertEquals("The test works fine.\nThe test works fine.\n", outputText);
+  void generateSentenceInvalidGrammarInput1()
+      throws EmptyDirectoryException{
+    String outputText = getCLIOutput(invalidInput +"\n" + quit.toUpperCase()+ "\n");
+    assertEquals(displayGrammar+invalidStatement+displayGrammar+exit, outputText);
   }
 
   @Test
-  void initiateProgram_No_1_No() {
-    inputStream = new ByteArrayInputStream("2\nn\n4\nn\nq\n".getBytes());
-    userInterfaceTest = new UserInterface(directoryTest, inputStream, ps, true);
-    userInterfaceTest.initiateProgram();
-    String outputText = byteArrayOutputStream.toString();
-    assertEquals("The test works fine.\n", outputText);
+  void generateSentenceInvalidGrammarInput2()
+      throws EmptyDirectoryException{
+    String outputText = getCLIOutput("2\n" + quit+ "\n");
+    assertEquals(displayGrammar+invalidStatement+displayGrammar+exit, outputText);
   }
 
   @Test
-  void initiateProgram_defMissing() {
-    inputStream = new ByteArrayInputStream("1\nn\nq\n".getBytes());
-    userInterfaceTest = new UserInterface(directoryTest, inputStream, ps, true);
-    userInterfaceTest.initiateProgram();
-    String outputText = byteArrayOutputStream.toString();
-    assertEquals("The Test Generator JSON file does not have productions of non-terminal adverb to create a random sentence.\n", outputText);
+  void generateSentenceInvalidDoAgainInput()
+      throws EmptyDirectoryException{
+    String outputText = getCLIOutput(grammar+"\n"+invalidInput+"\n"+quit+"\n");
+    assertEquals(displayGrammar+testSentence+useSameGrammar+invalidStatement+displayGrammar+exit, outputText);
   }
 
   @Test
-  void initiateProgram_recursiveFlow() {
-    File dir = new File("src/test/resources/recursiveFlow");
-    inputStream = new ByteArrayInputStream("1\nn\nq\n".getBytes());
-    userInterfaceTest = new UserInterface(dir, inputStream, ps, true);
-    userInterfaceTest.initiateProgram();
-    String outputText = byteArrayOutputStream.toString();
-    assertEquals("Grammar file is creating infinite recursive call on non terminal element.\n", outputText);
+  void generateSentenceValidDoAgainInput()
+      throws EmptyDirectoryException{
+    String outputText = getCLIOutput(grammar+"\n"+yes+"\n"+no+"\n"+quit+"\n");
+    assertEquals(displayGrammar+testSentence+useSameGrammar+testSentence+useSameGrammar+displayGrammar+exit, outputText);
   }
 
-  @Test
-  void emptyDirectoryExceptionTest() {
-    assertThrows(EmptyDirectoryException.class, () -> {
-      File dirTest = new File("src/test/resources/EmptyTestDirectory");
-      inputStream = new ByteArrayInputStream("2\nn\nq\n".getBytes());
-      userInterfaceTest = new UserInterface(dirTest, inputStream, ps, true);
-      userInterfaceTest.initiateProgram();
-    });
+
+  String getCLIOutput(String input) throws EmptyDirectoryException {
+    InputStream stdin = System.in;
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    PrintStream ps = new PrintStream(byteArrayOutputStream);
+    PrintStream stdout = System.out;
+    System.setOut(ps);
+    ui = new UserInterface(System.in, System.out);
+    ui.loadGrammars(new File(testDirectory));
+    ui.generateSentence();
+    System.setIn(stdin);
+    System.setOut(stdout);
+    return byteArrayOutputStream.toString();
   }
+
+
+
+
+
 }

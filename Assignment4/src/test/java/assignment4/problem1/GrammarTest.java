@@ -101,7 +101,7 @@ class GrammarTest {
     String expString = "Grammar{" +
         "grammarTitle='" + testGrammarTitle + '\'' +
         ", grammarDesc='" + testGrammarDesc + '\'' +
-        ", grammarDefinitions=" + nonTerminalMap +
+        ", grammarDefinition=" + nonTerminalMap +
         '}';
     assertEquals(expString, testGrammar.toString());
   }

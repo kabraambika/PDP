@@ -1,34 +1,30 @@
 package assignment4.problem1;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * Grammar class represents the grammar json file with information like grammar title, grammar desc,
- * and grammar definitions and its one or more productions
+ * Grammar class represents the grammar json file with information
+ * like grammar title, grammar desc, and grammar definitions and its one or more productions
  *
  * @author kabraambika19 and vrindabisani
  */
 public class Grammar {
-
-  private final String grammarTitle;
-  private final String grammarDesc;
-  private final Map<String, List<String>> grammarDefinitions;
+  private String grammarTitle;
+  private String grammarDesc;
+  private Map<String, List<String>> grammarDefinition;
 
   /**
    * Constructor of Grammar
    *
-   * @param grammarTitle       Represented as String, grammar title in json file
-   * @param grammarDesc        Represented as String, grammar description in json file
-   * @param grammarDefinitions Represented as String, grammar non-terminal and its definitions in
-   *                           json file
+   * @param grammarTitle Represented as String, grammar title in json file
+   * @param grammarDesc Represented as String, grammar description in json file
+   * @param grammarDefinition Represented as String, grammar non-terminal and its definitions in json file
    */
-  public Grammar(String grammarTitle, String grammarDesc,
-      Map<String, List<String>> grammarDefinitions) {
+  public Grammar(String grammarTitle, String grammarDesc, Map<String, List<String>> grammarDefinition) {
     this.grammarTitle = grammarTitle;
     this.grammarDesc = grammarDesc;
-    this.grammarDefinitions = grammarDefinitions;
+    this.grammarDefinition = grammarDefinition;
   }
 
   /**
@@ -50,13 +46,13 @@ public class Grammar {
   }
 
   /**
-   * This method provides list of values of given element from grammarDefinitions
+   * This method provides list of productions of given element from grammarDefinition
    *
    * @param element Represented as String, name of element in grammar
    * @return Represented as List of String
    */
   public List<String> getProductions(String element) {
-    return this.grammarDefinitions.get(element);
+    return this.grammarDefinition.get(element);
   }
 
   @Override
@@ -70,12 +66,12 @@ public class Grammar {
     Grammar grammar = (Grammar) obj;
     return Objects.equals(this.getGrammarTitle(), grammar.getGrammarTitle())
         && Objects.equals(this.getGrammarDesc(), grammar.getGrammarDesc())
-        && Objects.equals(this.grammarDefinitions, grammar.grammarDefinitions);
+        && Objects.equals(this.grammarDefinition, grammar.grammarDefinition);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.getGrammarTitle(), this.getGrammarDesc(), this.grammarDefinitions);
+    return Objects.hash(this.getGrammarTitle(), this.getGrammarDesc(), this.grammarDefinition);
   }
 
   @Override
@@ -83,7 +79,7 @@ public class Grammar {
     return "Grammar{" +
         "grammarTitle='" + this.getGrammarTitle() + '\'' +
         ", grammarDesc='" + this.getGrammarDesc() + '\'' +
-        ", grammarDefinitions=" + this.grammarDefinitions +
+        ", grammarDefinition=" + this.grammarDefinition +
         '}';
   }
 }

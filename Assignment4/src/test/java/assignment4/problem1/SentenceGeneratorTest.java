@@ -75,10 +75,8 @@ class SentenceGeneratorTest {
 
   @Test
   void InvalidElementException() {
-    assertThrows(MissingDefinitionException.class, () -> {
-      SentenceGenerator dupGen = new SentenceGenerator(testGrammar, 2L);
-      dupGen.generateRandomSentence();
-    });
+    SentenceGenerator dupGen = new SentenceGenerator(testGrammar, 2L);
+    assertEquals("Sincerely,", dupGen.generateRandomSentence());
   }
 
   @Test

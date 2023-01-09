@@ -2,35 +2,53 @@ package assignment4.problem1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.NoSuchElementException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
+  String[] args;
+  String helpNote = "Note: If you want to generate a random sentence, you can enter any number written before grammar name or press 'q' to quit from program.";
+  String displayGrammar = "The following grammars are available:\n"
+      + "1. Test Generator\n\n"
+      + helpNote
+      + "\nWhich would you like to use? (q to quit)\n";
+  String exit = "Exiting...\n";
+  String testDirectory;
 
   @BeforeEach
-  void setUp() {
-    Main main = new Main();
+  void setUp(){
+    args = new String[]{};
+    testDirectory = System.getProperty("user.dir") + "/src/test/resources/TestDirectory";
   }
 
   @Test
-  void mainTest() {
-    assertThrows(NoSuchElementException.class, () -> {
-      Main.main(new String[]{"src/test/resources/TestDirectory"});
-    });
+  void mainNoArgsTest(){
+    assertThrows(InvalidInputException.class, ()-> Main.main(args));
   }
 
   @Test
-  void mainTest_EmptyException() {
-    assertThrows(EmptyDirectoryException.class, () -> {
-      Main.main(new String[]{"src/test/resources/EmptyTestDirectory"});
-    });
+  void mainArgsTest(){
+    args = new String[]{"noSuchDirectory"};
+    assertThrows(DirectoryDoesNotExistException.class, ()-> Main.main(args));
   }
 
   @Test
-  void mainTest_NoArgs() {
-    assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
-      Main.main(new String[]{});
-    });
+  void fromMain() {
+    InputStream stdin = System.in;
+    System.setIn(new ByteArrayInputStream(("q\n").getBytes()));
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    PrintStream ps = new PrintStream(byteArrayOutputStream);
+    PrintStream stdout = System.out;
+    System.setOut(ps);
+    Main.main(new String[]{testDirectory});
+    System.setIn(stdin);
+    System.setOut(stdout);
+    String outputText = byteArrayOutputStream.toString();
+    assertEquals("Loading grammars...\n" + displayGrammar+exit, outputText);
   }
+
 }
